@@ -1,40 +1,34 @@
 <template lang="pug">
-  div(v-cloak).clearfix
-    aside-menu
-    div(v-for='(post, index) in posts', :key="index")
-      item(:post='post', :index="index")
+  div(key="index").card
+    h2.card__title {{ post.title }}
+    p.card__description {{ post.description.slice(0,150).concat('...') }}
+    div.card__tags
+      span.card__tag(v-for="tag in post.tags") {{ tag }}
+    div.card__platform 
+      a(:href="post.platform" target="_blank") {{ post.platform }}
+    div.card__timestamp
+      span.card__date {{ post.createdAt | moment(" MM.DD ") }} |
+      span.card__time {{ post.createdAt | moment(" HH:mm ")}}
+    div.card__actions
+      button.card__action.card__action--favore(@click='addToFavorites(post._id)') &#9733;
+      button.card__action.card__action--remove(@click='remove(post._id, index)') удалить
+
 </template>
 
 <script>
-import AsideMenu from '@/components/menu'
-import Item from '@/components/item'
-import { getPosts } from '@/services/posts'
-import { eventbus } from '@/eventbus/eventbus'
+import { deletePost } from '@/services/posts'
 export default {
-  name: 'home',
-  components: { AsideMenu, Item },
   data () {
     return {
-      msg: 'Welcome to Our app',
-      posts: [
-      ]
     }
   },
+  props: ['post', 'index'],
   methods: {
     addToFavorites (id) {
+    },
+    remove (id, index) {
+      deletePost(id, index)
     }
-  },
-  mounted () {
-    getPosts()
-    setInterval(() => {
-      getPosts()
-    }, 30000)
-    eventbus.$on('send posts', (data) => {
-      this.posts = data
-    })
-    eventbus.$on('remove post', (data) => {
-      this.posts.splice(data, 1)
-    })
   }
 }
 </script>

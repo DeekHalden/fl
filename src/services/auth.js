@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { eventbus } from '@/eventbus/eventbus'
 
-const baseURL = '/users'
+const baseURL = 'http://localhost:3000/users'
 
 export function doLogin (data, router) {
   axios.post(baseURL + '/login', data).then((response) => {

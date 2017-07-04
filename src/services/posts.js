@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { eventbus } from '@/eventbus/eventbus'
 
-const baseURL = '/posts'
+const baseURL = 'http://localhost:3000/posts'
 
 export function getPosts () {
   axios.get(baseURL + '/').then((response) => {

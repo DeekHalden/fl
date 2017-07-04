@@ -12,8 +12,6 @@ Vue.use(Router)
 Vue.use(VueCookie)
 
 const router = new Router({
-  mode: 'history',
-  base: __dirname,
   routes: [
     {
       path: '/',
@@ -45,17 +43,18 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   let token = getToken() || ''
-  if (to.path !== '/') {
-    if (token) {
-      console.log(2)
-      next()
+  if (to.matched.some(record => record.meta.protected)) {
+    if (!token) {
+      next({
+        path: '/',
+        query: { redirect: to.fullPath }
+      })
     } else {
-      next('/')
+      next()
     }
-  } else if (token && to.path === '/') {
-    next('/home')
+  } else {
+    next() // make sure to always call next()!
   }
-  next()
 })
 
 export default router
